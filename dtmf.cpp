@@ -31,7 +31,7 @@ TwoTone DTMFTONES[DTMF_TONE_COUNT] = {
     {FREQ_H4, FREQ_H3}, // DtmfTone::Tone_HASH
 };
 
-void playTones()
+void process()
 {
     _dtmfService->process();
 }
@@ -57,7 +57,7 @@ void startDtmfService(int dtmfPin1, int dtmfPin2)
 
     _dtmfService = new DtmfService(pin1->name, pin2->name);
 
-    dtmfTimer.attach_us(&playTones, 5 * 10000);
+    dtmfTimer.attach_us(&process, 5 * 100000);
 }
 
 //%

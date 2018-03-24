@@ -4,6 +4,8 @@
 namespace zkm
 {
 
+bool isPlaying = false;
+
 DtmfService::DtmfService(PinName pin1Name, PinName pin2Name)
 {
     this->pwmOut1 = new PwmOut(pin1Name);
@@ -12,6 +14,8 @@ DtmfService::DtmfService(PinName pin1Name, PinName pin2Name)
 
 void DtmfService::playTone(TwoTone twoTone, int duration)
 {
+    isPlaying = true;
+
     this->pwmOut1->period_us(1000000 / twoTone.A);
     this->pwmOut1->pulsewidth_us(1000000 / (twoTone.A >> 1));
 
@@ -23,8 +27,10 @@ void DtmfService::playTone(TwoTone twoTone, int duration)
 
 void DtmfService::process()
 {
-    if (uBit.systemTime() > this->toneEndTime)
+    if (isPlaying && uBit.systemTime() > this->toneEndTime)
     {
+        isPlaying = false;
+
         this->pwmOut1->pulsewidth_us(0);
         this->pwmOut2->pulsewidth_us(0);
     }
