@@ -13,7 +13,7 @@ class DtmfService
 {
     PwmOut *pwmOut1;
     PwmOut *pwmOut2;
-    int toneEndTime;
+    unsigned long toneEndTime;
 
   public:
     DtmfService(PinName pin1Name, PinName pin2Name);

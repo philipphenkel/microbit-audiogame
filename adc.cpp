@@ -83,7 +83,7 @@ void startAdcService(int adcPin, int sampleRate)
     _pService = new AdcService(pin->name);
 
     const int sampleInterval_us = 1000000 / sampleRate;
-    timer.attach_us(&captureSamples, sampleInterval_us);
+    //timer.attach_us(&captureSamples, sampleInterval_us);
 }
 
 //%
