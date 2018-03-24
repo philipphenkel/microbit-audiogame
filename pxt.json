@@ -19,6 +19,7 @@
         "dtmf.ts",
         "dtmfService.h",
         "dtmfService.cpp",
+        "enums.d.ts",
         "namespace.ts"
     ],
     "testFiles": [

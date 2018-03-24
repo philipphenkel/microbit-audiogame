@@ -16,7 +16,8 @@ typedef struct
 #define FREQ_H3 1477
 #define FREQ_H4 1633
 
-enum DtmfTone : int
+//%
+enum DtmfTone
 {
     Tone_1 = 0,
     Tone_2 = 1,
