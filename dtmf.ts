@@ -8,11 +8,8 @@ namespace zkm {
     }
 
    /**
-    * Starts a custom sensor service. The handler must call ``setSensorTemperature`` 
-    * to update the temperature sent to the service.
-    * @pin value to send over serial, eg. DtmfPin.P0
     */
-    //% blockId=zkm_start_dtmf block="start process from pin %dtmfPin1 and %dtmfPin2 "
+    //% blockId=zkm_start_dtmf block="start process from pin %dtmfPin1 | and %dtmfPin2"
     export function startProcess(dtmfPin1: DtmfPin, dtmfPin2: DtmfPin) {
         startDtmfService(dtmfPin1, dtmfPin2)
     }
@@ -23,13 +20,13 @@ namespace zkm {
     /**
      * todo
      */
-    //% blockId="zkm_playTone" block="playtone  %tone for %duration ms"
-    export function play(tone: number, duration: number): void {
+    //% blockId="zkm_playTone" block="playtone  %tone | for %duration | ms"
+    export function play(tone: DtmfTone, duration: number): void {
         return playTone(tone, duration);
     }
 
     //% shim=zkm::playTone
-    export function playTone(tone: number, duration: number): void { }
+    export function playTone(tone: DtmfTone, duration: number): void { }
 
 
 }

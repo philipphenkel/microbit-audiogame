@@ -1,5 +1,5 @@
 #include "MicroBitConfig.h"
-#include "DtmfService.h"
+#include "dtmfService.h"
 
 DtmfService::DtmfService(PinName pin1Name, PinName pin2Name)
 {

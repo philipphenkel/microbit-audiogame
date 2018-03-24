@@ -1,5 +1,5 @@
 #include "pxt.h"
-#include "DtmfService.h"
+#include "dtmfService.h"
 #include "Ticker.h"
 #include "dtmf.h"
 
@@ -54,7 +54,7 @@ void startDtmfService(int dtmfPin1, int dtmfPin2)
 
     _dtmfService = new DtmfService(pin1->name, pin2->name);
 
-    dtmfTimer.attach_us(&playTones, 5 * 100000);
+    dtmfTimer.attach_us(&playTones, 5 * 10000);
 }
 
 //%
