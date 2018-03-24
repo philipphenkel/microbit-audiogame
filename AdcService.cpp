@@ -11,7 +11,7 @@ void AdcService::setSampleRate(int)
 {
 }
 
-int AdcService::getSample()
+uint16_t AdcService::getSample()
 {
     return pin->read_u16() >> 2;
 }
