@@ -12,6 +12,8 @@
         "adc.ts",
         "AdcService.h",
         "AdcService.cpp",
+        "Goertzel.h",
+        "Goertzel.cpp",
         "namespace.ts"
     ],
     "testFiles": [

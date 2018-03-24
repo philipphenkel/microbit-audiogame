@@ -15,7 +15,7 @@ class AdcService
     AdcService(PinName name);
 
     void setSampleRate(int rate);
-    int getSample();
+    uint16_t getSample();
 
   private:
 };

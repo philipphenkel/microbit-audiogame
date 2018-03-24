@@ -1,6 +1,7 @@
 #include "pxt.h"
 #include "AdcService.h"
 #include "Ticker.h"
+#include "Goertzel.h"
 
 using namespace pxt;
 
@@ -9,6 +10,7 @@ namespace zkm
 
 
 AdcService *_pService = NULL;
+Goertzel *_pGoertzel = NULL;
 Action _handler;
 Action _testHandler;
 Ticker timer;
@@ -17,6 +19,7 @@ int count = 0;
 int startMillis = 0;
 int endMillis = 0;
 bool measureDone = false;
+int _magnitude = 0;
 
 
 
@@ -26,6 +29,49 @@ void callTest() {
     }
 }
 
+/* When a sample is taken, do calculations, and get frequency if ready 
+
+
+void Goertzel::sample(int sensorPin)
+{
+  for (int index = 0; index < _N; index++)
+  {
+    testData[index] = analogRead(sensorPin);
+  }
+}
+
+
+float Goertzel::detect()
+{
+  float	magnitude;
+
+  for (int index = 0; index < _N; index++)
+  {
+    ProcessSample(testData[index]);
+  }
+
+  magnitude = sqrt(Q1*Q1 + Q2*Q2 - coeff*Q1*Q2);
+
+  ResetGoertzel();
+  return magnitude;
+}
+
+
+*/
+
+
+//%
+uint16_t getSample()
+{
+    if (NULL == _pService) {
+        return -1;
+    }
+    return _pService->getSample();
+}
+
+void handleSample(uint16_t sample) {
+    _pGoertzel->processSample(sample);
+}
 
 void captureSamples()
 {
@@ -45,12 +91,15 @@ void captureSamples()
         }
     }
 */
+    handleSample(getSample());
+
     if (_handler)
     {
          pxt::runAction0(_handler);
 //        MicroBitEvent ev(MICROBIT_ID_ADC, MICROBIT_ADC_EVT_UPDATE);
     }
 }
+
 
 
 //%
@@ -81,8 +130,10 @@ void startAdcService(int adcPin, int sampleRate)
     }
 
     _pService = new AdcService(pin->name);
+    _pGoertzel = new Goertzel(697, 20, sampleRate);
 
     const int sampleInterval_us = 1000000 / sampleRate;
+
     timer.attach_us(&captureSamples, sampleInterval_us);
 }
 
@@ -95,20 +146,11 @@ void setSampleRate(int rate)
     _pService->setSampleRate(rate);
 }
 
-//%
-int getSample()
-{
-    if (NULL == _pService) {
-        return -1;
-    }
-    return _pService->getSample();
-}
-
 
 //%
 int getTest()
 {
-    return count;
+    return _pGoertzel->getMagnitude();
 }
 
 }
