@@ -28,7 +28,7 @@ bool Goertzel::processSample(uint16_t sample)
     Q2 = Q1;
     Q1 = Q0;
     if (count >= N) {
-        lastMagnitude = sqrt(Q1 * Q1 + Q2 * Q2 - coeff * Q1 * Q2);
+        lastMagnitude = (Q1 * Q1 + Q2 * Q2 - coeff * Q1 * Q2); // no sqrt
         resetGoertzel();
         return true;
     }

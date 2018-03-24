@@ -7,11 +7,11 @@ AdcService::AdcService(PinName name)
     pin = new AnalogIn(name);
 }
 
-void AdcService::setSampleRate(int rate)
+void AdcService::setSampleRate(int)
 {
 }
 
-uint16_t AdcService::getSample()
+int AdcService::getSample()
 {
-    return pin->read_u16();
+    return pin->read_u16() >> 2;
 }

@@ -9,9 +9,10 @@ using namespace pxt;
 namespace zkm
 {
 
+namespace
+{
 AdcService *_pService = NULL;
-Goertzel *_pGoertzel = NULL;
-Action _handler;
+Goertzel *_goertzels[8];
 Action _testHandler;
 Ticker timer;
 bool test = false;
@@ -20,6 +21,9 @@ int startMillis = 0;
 int endMillis = 0;
 bool measureDone = false;
 int _magnitude = 0;
+const int checkIntervalMillis = 5000;
+int lastDtmfCheckMillis = 0;
+}
 
 void callTest()
 {
@@ -69,10 +73,21 @@ uint16_t getSample()
     return _pService->getSample();
 }
 
-void handleSample(uint16_t sample)
-{
-    _pGoertzel->processSample(sample);
+void detectAndNotifyDtmf() {
+    int currentMillis = uBit.systemTime();
+    if (currentMillis - lastDtmfCheckMillis > checkIntervalMillis) {
+        lastDtmfCheckMillis = uBit.systemTime();
+        zkm::notifyToneDetected(DtmfTone::Tone_1);
+    }
 }
+
+void processSample(uint16_t sample)
+{
+    for (int i=0; i<4; i++) {
+        _goertzels[i]->processSample(sample);
+    }
+}
+
 
 void captureSamples()
 {
@@ -92,21 +107,9 @@ void captureSamples()
         }
     }
 */
-    zkm::notifyToneDetected(DtmfTone::Tone_1);
-    handleSample(getSample());
 
-    if (_handler)
-    {
-        pxt::runAction0(_handler);
-        //        MicroBitEvent ev(MICROBIT_ID_ADC, MICROBIT_ADC_EVT_UPDATE);
-    }
-}
-
-//%
-void onSample(Action handler)
-{
-    _handler = handler;
-    pxt::incr(_handler);
+    processSample(getSample());
+    detectAndNotifyDtmf();
 }
 
 //%
@@ -131,7 +134,15 @@ void startAdcService(int adcPin, int sampleRate)
     }
 
     _pService = new AdcService(pin->name);
-    _pGoertzel = new Goertzel(697, 20, sampleRate);
+
+    _goertzels[0] = new Goertzel(FREQ_L1, 20, sampleRate);
+    _goertzels[1] = new Goertzel(FREQ_L2, 20, sampleRate);
+    _goertzels[2] = new Goertzel(FREQ_L3, 20, sampleRate);
+    _goertzels[3] = new Goertzel(FREQ_L4, 20, sampleRate);
+    _goertzels[4] = new Goertzel(FREQ_H1, 20, sampleRate);
+    _goertzels[5] = new Goertzel(FREQ_H2, 20, sampleRate);
+    _goertzels[6] = new Goertzel(FREQ_H3, 20, sampleRate);
+    _goertzels[7] = new Goertzel(FREQ_H4, 20, sampleRate);
 
     const int sampleInterval_us = 1000000 / sampleRate;
 
@@ -151,6 +162,6 @@ void setSampleRate(int rate)
 //%
 int getTest()
 {
-    return _pGoertzel->getMagnitude();
+    return _goertzels[0]->getMagnitude();
 }
 }
