@@ -69,4 +69,16 @@ namespace zkm {
     //% shim=zkm::setThreshold
     export function setThreshold(threshold: number): void { return }
 
+
+    /**
+     * todo
+     */
+    //% blockId="zkm_get_goertzel" block="get goertzel %index"
+    export function getGoertzelValue(index: number): number {
+        return getGoertzel(index)
+    }
+
+    //% shim=zkm::getGoertzel
+    export function getGoertzel(index: number): number { return 23 }
+
 }

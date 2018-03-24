@@ -140,4 +140,11 @@ int getTest()
 {
     return _goertzels[0]->getMagnitude();
 }
+
+//%
+int getGoertzel(int index)
+{
+    return _goertzels[index]->getMagnitude();
+}
+
 }
