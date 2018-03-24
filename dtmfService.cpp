@@ -17,10 +17,10 @@ void DtmfService::playTone(TwoTone twoTone, int duration)
     isPlaying = true;
 
     this->pwmOut1->period_us(1000000 / twoTone.A);
-    this->pwmOut1->pulsewidth_us(1000000 / (twoTone.A >> 1));
+    this->pwmOut1->pulsewidth_us(1000000 / (twoTone.A << 1));
 
     this->pwmOut2->period_us(1000000 / twoTone.B);
-    this->pwmOut2->pulsewidth_us(1000000 / (twoTone.B >> 1));
+    this->pwmOut2->pulsewidth_us(1000000 / (twoTone.B << 1));
 
     this->toneEndTime = uBit.systemTime() + duration;
 }
