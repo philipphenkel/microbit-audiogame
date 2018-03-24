@@ -69,12 +69,8 @@ inline void notifyActiveTone(DtmfTone tone)
 void detectAndNotifyDtmf()
 {
     int currentMillis = uBit.systemTime();
-<<<<<<< HEAD
-    if (currentMillis - lastDtmfCheckMillis > checkIntervalMillis)
+    if ((currentMillis - lastDtmfCheckMillis) > checkIntervalMillis)
     {
-=======
-    if ((currentMillis - lastDtmfCheckMillis) > checkIntervalMillis) {
->>>>>>> move tick to adc
         lastDtmfCheckMillis = uBit.systemTime();
         notifyActiveTone(DtmfTone::Tone_1);
         notifyActiveTone(DtmfTone::Tone_2);
