@@ -1,0 +1,21 @@
+{
+    "name": "pxt-adc",
+    "version": "0.0.1",
+    "description": "analog to digital converter",
+    "license": "MIT",
+    "dependencies": {
+        "core": "*"
+    },
+    "files": [
+        "README.md",
+        "adc.cpp",
+        "adc.ts",
+        "AdcService.h",
+        "AdcService.cpp",
+        "namespace.ts"
+    ],
+    "testFiles": [
+        "test.ts"
+    ],
+    "public": true
+}
