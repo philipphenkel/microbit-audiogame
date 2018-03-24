@@ -89,4 +89,8 @@ void notifyToneDetected(DtmfTone tone)
     }
 }
 
+TwoTone getTwoTone(DtmfTone tone) {
+    return DTMFTONES[tone];
+}
+
 }

@@ -43,6 +43,8 @@ enum DtmfTone
 #define DTMF_TONE_COUNT 16
 
 void notifyToneDetected(DtmfTone tone);
+TwoTone getTwoTone(DtmfTone tone);
+
 
 }
 
