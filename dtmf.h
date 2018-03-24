@@ -44,7 +44,7 @@ enum DtmfTone
 
 void notifyToneDetected(DtmfTone tone);
 TwoTone getTwoTone(DtmfTone tone);
-
+void dtmfTick();
 
 }
 
