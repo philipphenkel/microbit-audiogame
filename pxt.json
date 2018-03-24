@@ -12,6 +12,7 @@
         "adc.ts",
         "AdcService.h",
         "AdcService.cpp",
+        "dtmf.h",
         "dtmf.cpp",
         "dtmf.ts",
         "DtmfService.h",
