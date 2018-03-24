@@ -9,6 +9,8 @@
 
 class AdcService
 {
+  AnalogIn *pin;
+
   public:
     AdcService(PinName name);
 

@@ -15,7 +15,7 @@ bool test = false;
 
 void captureSamples()
 {
-    test = !test;
+  /*  test = !test;
 
     if (test) {
         uBit.display.printCharAsync('A');
@@ -23,10 +23,14 @@ void captureSamples()
     else {
         uBit.display.printCharAsync('B');
     }
+*/
+    _pService->getSample();
 
     if (_handler)
     {
         pxt::runAction0(_handler);
+        
+        
 //        MicroBitEvent ev(MICROBIT_ID_ADC, MICROBIT_ADC_EVT_UPDATE);
     }
 }
