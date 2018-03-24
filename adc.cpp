@@ -10,27 +10,44 @@ namespace zkm
 
 AdcService *_pService = NULL;
 Action _handler;
+Action _testHandler;
 Ticker timer;
 bool test = false;
+int count = 0;
+int startMillis = 0;
+int endMillis = 0;
+bool measureDone = false;
+
+
+
+void callTest() {
+    if (_testHandler) {
+        pxt::runAction0(_testHandler);
+    }
+}
+
 
 void captureSamples()
 {
-  /*  test = !test;
+    /*
+    if (count == 0) {
+        startMillis = uBit.systemTime();
+    }
 
-    if (test) {
-        uBit.display.printCharAsync('A');
-    }
-    else {
-        uBit.display.printCharAsync('B');
-    }
-*/
     _pService->getSample();
 
+    if (!measureDone) {
+        count++;
+        int currentMillis = uBit.systemTime();
+        if (currentMillis - startMillis > 1000 )  {
+            measureDone = true;
+            callTest();
+        }
+    }
+*/
     if (_handler)
     {
-        pxt::runAction0(_handler);
-        
-        
+         pxt::runAction0(_handler);
 //        MicroBitEvent ev(MICROBIT_ID_ADC, MICROBIT_ADC_EVT_UPDATE);
     }
 }
@@ -44,7 +61,15 @@ void onSample(Action handler)
 }
 
 //%
-void startAdcService(int adcPin)
+void onTest(Action handler)
+{
+    _testHandler = handler;
+    pxt::incr(_testHandler);
+}
+
+
+//%
+void startAdcService(int adcPin, int sampleRate)
 {
     if (NULL != _pService) {
         return;
@@ -57,7 +82,8 @@ void startAdcService(int adcPin)
 
     _pService = new AdcService(pin->name);
 
-    timer.attach_us(&captureSamples, 5 * 100000);
+    const int sampleInterval_us = 1000000 / sampleRate;
+    timer.attach_us(&captureSamples, sampleInterval_us);
 }
 
 //%
@@ -76,6 +102,13 @@ int getSample()
         return -1;
     }
     return _pService->getSample();
+}
+
+
+//%
+int getTest()
+{
+    return count;
 }
 
 }
