@@ -14,6 +14,11 @@
         "AdcService.cpp",
         "Goertzel.h",
         "Goertzel.cpp",
+        "dtmf.h",
+        "dtmf.cpp",
+        "dtmf.ts",
+        "DtmfService.h",
+        "DtmfService.cpp",
         "namespace.ts"
     ],
     "testFiles": [
