@@ -1,6 +1,9 @@
 #ifndef DTMF_H
 #define DTMF_H
 
+namespace zkm
+{
+
 typedef struct
 {
     int A;
@@ -36,5 +39,11 @@ enum DtmfTone
     Tone_STAR = 14,
     Tone_HASH = 15,
 };
+
+#define DTMF_TONE_COUNT 16
+
+void notifyToneDetected(DtmfTone tone);
+
+}
 
 #endif

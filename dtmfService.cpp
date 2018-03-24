@@ -1,6 +1,9 @@
 #include "MicroBitConfig.h"
 #include "dtmfService.h"
 
+namespace zkm
+{
+
 DtmfService::DtmfService(PinName pin1Name, PinName pin2Name)
 {
     this->pwmOut1 = new PwmOut(pin1Name);
@@ -25,4 +28,5 @@ void DtmfService::process()
         this->pwmOut1->pulsewidth_us(0);
         this->pwmOut2->pulsewidth_us(0);
     }
+}
 }

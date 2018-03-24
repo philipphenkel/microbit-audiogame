@@ -28,5 +28,17 @@ namespace zkm {
     //% shim=zkm::playTone
     export function playTone(tone: DtmfTone, duration: number): void { }
 
+    /**
+    * @tone the tone, eg:DtmfTone.Tone_1
+    * @handler action
+    */
+    //% weight=70
+    //% blockId=zkm_on_tone block="on detect tone %tone"
+    export function onToneDetected(tone: DtmfTone, handler: Action) {
+        onTone(tone, handler)
+    }
+
+    //% shim=zkm::onTone
+    export function onTone(tone: DtmfTone, handler: Action): void { return }
 
 }

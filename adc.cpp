@@ -1,13 +1,13 @@
 #include "pxt.h"
-#include "AdcService.h"
 #include "Ticker.h"
+#include "dtmf.h"
+#include "AdcService.h"
 #include "Goertzel.h"
 
 using namespace pxt;
 
 namespace zkm
 {
-
 
 AdcService *_pService = NULL;
 Goertzel *_pGoertzel = NULL;
@@ -21,10 +21,10 @@ int endMillis = 0;
 bool measureDone = false;
 int _magnitude = 0;
 
-
-
-void callTest() {
-    if (_testHandler) {
+void callTest()
+{
+    if (_testHandler)
+    {
         pxt::runAction0(_testHandler);
     }
 }
@@ -59,17 +59,18 @@ float Goertzel::detect()
 
 */
 
-
 //%
 uint16_t getSample()
 {
-    if (NULL == _pService) {
+    if (NULL == _pService)
+    {
         return -1;
     }
     return _pService->getSample();
 }
 
-void handleSample(uint16_t sample) {
+void handleSample(uint16_t sample)
+{
     _pGoertzel->processSample(sample);
 }
 
@@ -91,16 +92,15 @@ void captureSamples()
         }
     }
 */
+    zkm::notifyToneDetected(DtmfTone::Tone_1);
     handleSample(getSample());
 
     if (_handler)
     {
-         pxt::runAction0(_handler);
-//        MicroBitEvent ev(MICROBIT_ID_ADC, MICROBIT_ADC_EVT_UPDATE);
+        pxt::runAction0(_handler);
+        //        MicroBitEvent ev(MICROBIT_ID_ADC, MICROBIT_ADC_EVT_UPDATE);
     }
 }
-
-
 
 //%
 void onSample(Action handler)
@@ -116,16 +116,17 @@ void onTest(Action handler)
     pxt::incr(_testHandler);
 }
 
-
 //%
 void startAdcService(int adcPin, int sampleRate)
 {
-    if (NULL != _pService) {
+    if (NULL != _pService)
+    {
         return;
     }
 
     MicroBitPin *pin = getPin(adcPin);
-    if (!pin) {
+    if (!pin)
+    {
         return;
     }
 
@@ -140,17 +141,16 @@ void startAdcService(int adcPin, int sampleRate)
 //%
 void setSampleRate(int rate)
 {
-    if (NULL == _pService) {
+    if (NULL == _pService)
+    {
         return;
     }
     _pService->setSampleRate(rate);
 }
-
 
 //%
 int getTest()
 {
     return _pGoertzel->getMagnitude();
 }
-
 }

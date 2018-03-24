@@ -10,6 +10,9 @@
 #define MICROBIT_ID_DTMF 9602
 #define MICROBIT_DTMF_EVT_UPDATE 2
 
+namespace zkm
+{
+
 class DtmfService
 {
     PwmOut *pwmOut1;
@@ -25,5 +28,7 @@ class DtmfService
 
   private:
 };
+
+}
 
 #endif

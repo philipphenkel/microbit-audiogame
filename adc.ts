@@ -11,6 +11,7 @@ namespace zkm {
     * @pin value to send over serial, eg: AdcPin.P0
     * @sampleRate in Hz, eg: 4096
     */
+    //% weight=80
     //% blockId=zkm_start block="start capture from pin %pin | with sample rate %sampleRate"
     export function startCapture(adcPin: AdcPin, sampleRate: number) {
         startAdcService(adcPin, sampleRate)
@@ -18,19 +19,6 @@ namespace zkm {
 
     //% shim=zkm::startAdcService
     export function startAdcService(adcPin: number, sampleRate: number): void { return }
-
-    /**
-    * Starts a custom sensor service. The handler must call ``setSensorTemperature`` 
-    * to update the temperature sent to the service.
-    * @handler action
-    */
-    //% blockId=zkm_on_sample block="on sample "
-    export function onSampleReady(handler: Action) {
-        onSample(handler)
-    }
-
-    //% shim=zkm::onSample
-    export function onSample(handler: Action): void { return }
 
     /**
      * todo
@@ -67,7 +55,5 @@ namespace zkm {
 
     //% shim=zkm::getTest
     export function getTest(): number { return 4 }
-
-
 
 }
