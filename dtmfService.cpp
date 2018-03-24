@@ -7,13 +7,13 @@ DtmfService::DtmfService(PinName pin1Name, PinName pin2Name)
     this->pwmOut2 = new PwmOut(pin2Name);
 }
 
-void DtmfService::playTone(int frequency1, int frequency2, int duration)
+void DtmfService::playTone(TwoTone twoTone, int duration)
 {
-    this->pwmOut1->period_us(1000000/frequency1);
-    this->pwmOut1->pulsewidth_us(1000000 / (frequency1 >> 1));
+    this->pwmOut1->period_us(1000000 / twoTone.A);
+    this->pwmOut1->pulsewidth_us(1000000 / (twoTone.A >> 1));
 
-    this->pwmOut2->period_us(1000000 / frequency2);
-    this->pwmOut2->pulsewidth_us(1000000 / (frequency2 >> 1));
+    this->pwmOut2->period_us(1000000 / twoTone.B);
+    this->pwmOut2->pulsewidth_us(1000000 / (twoTone.B >> 1));
 
     this->toneEndTime = uBit.systemTime() + duration;
 }

@@ -23,13 +23,13 @@ namespace zkm {
     /**
      * todo
      */
-    //% blockId="zkm_playTone" block="playTone %frequency1|%frequency2|%duration"
-    export function play(frequency1: number, frequency2: number, duration: number): void {
-        return playTone(frequency1, frequency2, duration);
+    //% blockId="zkm_playTone" block="playtone  %tone for %duration ms"
+    export function play(tone: number, duration: number): void {
+        return playTone(tone, duration);
     }
 
     //% shim=zkm::playTone
-    export function playTone(frequency1: number, frequency2: number, duration: number): void { }
+    export function playTone(tone: number, duration: number): void { }
 
 
 }

@@ -1,3 +1,6 @@
+#ifndef DTMF_H
+#define DTMF_H
+
 typedef struct
 {
     int A;
@@ -13,7 +16,7 @@ typedef struct
 #define FREQ_H3 1477
 #define FREQ_H4 1633
 
-enum Tone : int
+enum DtmfTone : int
 {
     Tone_1 = 0,
     Tone_2 = 1,
@@ -33,21 +36,4 @@ enum Tone : int
     Tone_HASH = 15,
 };
 
-TwoTone TONES[16] = {
-    {FREQ_L1, FREQ_H1}, // Tone::Tone_1
-    {FREQ_L1, FREQ_H2}, // Tone::Tone_2
-    {FREQ_L1, FREQ_H3}, // Tone::Tone_3
-    {FREQ_L2, FREQ_H1}, // Tone::Tone_4
-    {FREQ_L2, FREQ_H2}, // Tone::Tone_5
-    {FREQ_L2, FREQ_H3}, // Tone::Tone_6
-    {FREQ_L3, FREQ_H1}, // Tone::Tone_7
-    {FREQ_L3, FREQ_H2}, // Tone::Tone_8
-    {FREQ_L3, FREQ_H3}, // Tone::Tone_9
-    {FREQ_H4, FREQ_H2}, // Tone::Tone_0
-    {FREQ_L1, FREQ_H4}, // Tone::Tone_A
-    {FREQ_L2, FREQ_H4}, // Tone::Tone_B
-    {FREQ_L3, FREQ_H4}, // Tone::Tone_C
-    {FREQ_L4, FREQ_H4}, // Tone::Tone_D
-    {FREQ_H4, FREQ_H1}, // Tone::Tone_STAR
-    {FREQ_H4, FREQ_H3}, // Tone::Tone_HASH
-};
+#endif

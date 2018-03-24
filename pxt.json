@@ -17,8 +17,8 @@
         "dtmf.h",
         "dtmf.cpp",
         "dtmf.ts",
-        "DtmfService.h",
-        "DtmfService.cpp",
+        "dtmfService.h",
+        "dtmfService.cpp",
         "namespace.ts"
     ],
     "testFiles": [
