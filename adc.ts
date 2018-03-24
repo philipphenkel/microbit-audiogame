@@ -56,4 +56,17 @@ namespace zkm {
     //% shim=zkm::getTest
     export function getTest(): number { return 4 }
 
+   /**
+    * test
+    * @threshold threshold, eg: 1000
+    */
+    //% weight=80
+    //% blockId=zkm_threshold block="set threshold %threshold"
+    export function setGoertzelThreshold(threshold: number) {
+        setThreshold(threshold)
+    }
+
+    //% shim=zkm::setThreshold
+    export function setThreshold(threshold: number): void { return }
+
 }

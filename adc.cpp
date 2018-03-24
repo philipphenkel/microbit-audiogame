@@ -17,9 +17,8 @@ Action _testHandler;
 Ticker timer;
 const int checkIntervalMillis = 1000;
 int lastDtmfCheckMillis = 0;
+int _threshold = 1000;
 }
-
-
 
 void callTest()
 {
@@ -41,7 +40,7 @@ uint16_t getSample()
 
 inline bool isActive(Goertzel *goertzel)
 {
-    return goertzel->getMagnitude() > 1000;
+    return goertzel->getMagnitude() > _threshold;
 }
 
 
@@ -131,13 +130,9 @@ void startAdcService(int adcPin, int sampleRate)
 }
 
 //%
-void setSampleRate(int rate)
+void setThreshold(int threshold)
 {
-    if (NULL == _pService)
-    {
-        return;
-    }
-    _pService->setSampleRate(rate);
+    _threshold = threshold;
 }
 
 //%
