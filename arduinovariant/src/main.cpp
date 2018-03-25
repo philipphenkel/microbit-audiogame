@@ -31,6 +31,7 @@
 */
 #include "Goertzel.h"
 #include "dtmf.h"
+#include "sampler.h"
 
 int sensorPin = 0;
 int speakerPin1 = 1;
@@ -49,16 +50,6 @@ int led = 26;
 // Nyquist says the highest frequency we can target is SAMPLING_FREQUENCY/2
 const float TARGET_FREQUENCY = 700;
 
-// if you're trying to detect several different drum hits all within low frequency like
-// ~100-200hz you'll need a small bin size like 25 or 50 to distinguish them.
-// If however you're just trying to find ANY bass hit you might want something
-// basically equal to frequency youre looking for like ~100
-
-// If Im detecting a frequency much higher with no care about nearby tones, like 2000hz
-// Ill set to a round divisor like 200 So 1900 to 2100 could trigger, but not less or more
-// Max is 200 as we have limited ram in the Arduino, and sampling longer would make us less
-// responsive anyway
-const int N = 100;
 
 // This is what will trigger the led. Its INCREDIBLY squishy based on volume of your source,
 // frequency, etc. You'll just need to get in your environment and look at the serial console
@@ -76,7 +67,10 @@ const float THRESHOLD = 1000;
 //  _SFR_BYTE(ADCSRA) &= ~_BV(ADPS0); // Clear ADPS0
 const float SAMPLING_FREQUENCY = 8900;
 
-Goertzel goertzel = Goertzel(TARGET_FREQUENCY, N, SAMPLING_FREQUENCY);
+Sampler* sampler = new Sampler();
+
+Goertzel goertzel1 = Goertzel(697, SAMPLING_FREQUENCY, sampler);
+//Goertzel goertzel2 = Goertzel(1209, SAMPLING_FREQUENCY, sampler);
 DTMF dtmf = DTMF(speakerPin1, speakerPin2);
 
 void setup() {
@@ -98,17 +92,21 @@ void setup() {
 
 void loop()
 {
-  goertzel.sample(sensorPin); //Will take n samples
+  sampler->sample(sensorPin);
 
-  float magnitude = goertzel.detect();  //check them for target_freq
+  float magnitude1 = goertzel1.detect();
+  //float magnitude2 = goertzel2.detect();
 
-  if(magnitude > THRESHOLD) { //if you're getting false hits or no hits adjust this
+  if(magnitude1 > THRESHOLD) { //if you're getting false hits or no hits adjust this
     digitalWrite(led, HIGH); //if found, enable led
   } else {
     digitalWrite(led, LOW); //if not found, or lost, disable led
   }
 
-  Serial.println(magnitude);
+  Serial.print(magnitude1);
+  //Serial.print(" - ");
+  //Serial.print(magnitude2);
+  Serial.println();
 
   if (digitalRead(button1pin) == LOW) {
     dtmf.playDTMF(0, 500);

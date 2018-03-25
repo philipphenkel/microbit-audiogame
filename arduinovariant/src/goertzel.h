@@ -22,23 +22,20 @@
 
 // include types & constants of Wiring core API
 #include "Arduino.h"
+#include "sampler.h"
 
 #define MAXN 200
 #define ADCCENTER 512
 
-// library interface description
 class Goertzel
 {
-  // user-accessible "public" interface
-  public:
-    Goertzel(float,float,float);
-    Goertzel(float,float);
+public:
+  Goertzel(float, float, Sampler* sampler);
 	void sample(int);
 	float detect();
 
-  // library-accessible "private" interface
-  private:
-	void GetRealImag(float*,float*);
+private:
+	void GetRealImag(float*, float*);
 	void ProcessSample(int);
 	void ResetGoertzel(void);
 
