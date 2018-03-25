@@ -85,8 +85,7 @@ void detectAndNotifyDtmf()
 
 void detectTones()
 {
-    _pService->captureSamples(_samples, N, _sampleRate);
-    schedule();
+    _pService->captureSamples(_samples, N);
     detectAndNotifyDtmf();
     fiber_sleep(checkIntervalMillis);
 }

@@ -5,7 +5,6 @@ AdcService::AdcService(MicroBitPin *pin)
 {
     this->pin = pin;
     pin->getAnalogValue();
-    timer = new Timer();
 }
 
 uint16_t AdcService::readSample()
@@ -13,31 +12,27 @@ uint16_t AdcService::readSample()
     return pin->getAnalogValue();
 }
 
-void AdcService::captureSamples(uint16_t *samples, int count, int sampleRate)
+void AdcService::captureSamples(uint16_t *samples, int count)
 {
-    capture(samples, count, sampleRate);
+    capture(samples, count);
 }
 
-void AdcService::captureSamples8Bit(uint8_t *samples, int count, int sampleRate)
+void AdcService::captureSamples8Bit(uint8_t *samples, int count)
 {
-    capture(samples, count, sampleRate);
+    capture(samples, count);
 }
 
 template <class T>
-void AdcService::capture(T *samples, int count, int sampleRate)
+void AdcService::capture(T *samples, int count)
 {
-    const int readInterval_us = 1000000 / sampleRate;
-    timer->start();
+    unsigned long start = uBit.systemTime();
     for (int i = 0; i < count; ++i)
     {
-        timer->reset();
         read(samples[i]);
-        while (timer->read_us() < readInterval_us)
-        {
-            ;
-        }
     }
-    timer->stop();
+    unsigned long end = uBit.systemTime();
+    unsigned long duration = end - start;
+    measuredSampleRate = (int)count / (duration / 1000);
 }
 
 void AdcService::read(uint16_t &sample)
