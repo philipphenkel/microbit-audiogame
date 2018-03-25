@@ -1,16 +1,17 @@
 #ifndef ADC_SERVICE_H
 #define ADC_SERVICE_H
 
+#include "pxt.h"
 #include "mbed.h"
 
 class AdcService
 {
 private:
-  AnalogIn *pin;
+  MicroBitPin *pin;
   Timer *timer;
 
 public:
-  AdcService(PinName name);
+  AdcService(MicroBitPin *pin);
 
   uint16_t readSample();
   void captureSamples(uint16_t *samples, int count, int sampleRate);

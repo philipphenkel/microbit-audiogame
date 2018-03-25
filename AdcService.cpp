@@ -1,15 +1,16 @@
 #include "MicroBitConfig.h"
 #include "AdcService.h"
 
-AdcService::AdcService(PinName name)
+AdcService::AdcService(MicroBitPin *pin)
 {
-    pin = new AnalogIn(name);
+    this->pin = pin;
+    pin->getAnalogValue();
     timer = new Timer();
 }
 
 uint16_t AdcService::readSample()
 {
-    return pin->read_u16();
+    return pin->getAnalogValue();
 }
 
 void AdcService::captureSamples(uint16_t *samples, int count, int sampleRate)
@@ -41,10 +42,10 @@ void AdcService::capture(T *samples, int count, int sampleRate)
 
 void AdcService::read(uint16_t &sample)
 {
-    sample = pin->read_u16();
+    sample = pin->getAnalogValue();
 }
 
 void AdcService::read(uint8_t &sample)
 {
-    sample = pin->read_u16() >> 2;
+    sample = pin->getAnalogValue() >> 2;
 }

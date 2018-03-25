@@ -105,7 +105,7 @@ void startAdcService(int adcPin, int sampleRate)
         return;
     }
 
-    _pService = new AdcService(pin->name);
+    _pService = new AdcService(pin);
 
     _goertzels[0] = new Goertzel(FREQ_L1, N, sampleRate);
     _goertzels[1] = new Goertzel(FREQ_H1, N, sampleRate);
