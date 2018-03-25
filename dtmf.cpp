@@ -33,6 +33,7 @@ TwoTone DTMFTONES[DTMF_TONE_COUNT] = {
 void dtmfTick()
 {
     _dtmfService->tick();
+    // TODO ??? fiber_sleep(_pService->getPeriod()); 
 }
 
 //%
@@ -55,6 +56,8 @@ void startDtmfService(int dtmfPin1, int dtmfPin2)
     }
 
     _dtmfService = new DtmfService(pin1->name, pin2->name);
+
+    create_fiber(dtmfTick);
 }
 
 //%

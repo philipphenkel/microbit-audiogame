@@ -15,9 +15,11 @@ AdcService *_pService = NULL;
 Goertzel *_goertzels[8];
 Action _testHandler;
 Ticker timer;
-const int checkIntervalMillis = 1000;
-int lastDtmfCheckMillis = 0;
+const int checkIntervalMillis = 200;
 int _threshold = 1000;
+int _sampleRate = 8000;
+uint16_t *_samples = NULL;
+int N = 205;
 }
 
 void callTest()
@@ -40,20 +42,20 @@ uint16_t getSample()
 
 inline bool isActive(Goertzel *goertzel)
 {
-    return goertzel->getMagnitude() > _threshold;
+    return goertzel->getMagnitudeSquared() > _threshold;
 }
-
 
 inline bool isToneActive(DtmfTone tone)
 {
     // TwoTone tt = getTwoTone(tone);
-    switch(tone) {
-        case DtmfTone::Tone_1:
-            return isActive(_goertzels[0]) && isActive(_goertzels[1]);
-        case DtmfTone::Tone_2:
-            return isActive(_goertzels[0]) && isActive(_goertzels[3]);
-        default:
-            return false;
+    switch (tone)
+    {
+    case DtmfTone::Tone_1:
+        return isActive(_goertzels[0]) && isActive(_goertzels[1]);
+    case DtmfTone::Tone_2:
+        return isActive(_goertzels[0]) && isActive(_goertzels[3]);
+    default:
+        return false;
     }
 }
 
@@ -65,38 +67,28 @@ inline void notifyActiveTone(DtmfTone tone)
     }
 }
 
+void processSamples()
+{
+    for (int i = 0; i < 8; i++)
+    {
+        _goertzels[i]->reset();
+        _goertzels[i]->processSamples(_samples);
+    }
+}
+
 void detectAndNotifyDtmf()
 {
-    int currentMillis = uBit.systemTime();
-    if ((currentMillis - lastDtmfCheckMillis) > checkIntervalMillis)
-    {
-        lastDtmfCheckMillis = uBit.systemTime();
-        notifyActiveTone(DtmfTone::Tone_1);
-        notifyActiveTone(DtmfTone::Tone_2);
-    }
+    processSamples();
+    notifyActiveTone(DtmfTone::Tone_1);
+    notifyActiveTone(DtmfTone::Tone_2);
 }
 
-void processSample(uint16_t sample)
+void detectTones()
 {
-    for (int i = 0; i < 4; i++)
-    {
-        _goertzels[i]->processSample(sample);
-    }
-}
-
-void captureSamples()
-{
-    processSample(getSample());
+    _pService->captureSamples(_samples, N, _sampleRate);
+    schedule();
     detectAndNotifyDtmf();
-
-    dtmfTick();
-}
-
-//%
-void onTest(Action handler)
-{
-    _testHandler = handler;
-    pxt::incr(_testHandler);
+    fiber_sleep(checkIntervalMillis);
 }
 
 //%
@@ -115,18 +107,19 @@ void startAdcService(int adcPin, int sampleRate)
 
     _pService = new AdcService(pin->name);
 
-    _goertzels[0] = new Goertzel(FREQ_L1, 20, sampleRate);
-    _goertzels[1] = new Goertzel(FREQ_H1, 20, sampleRate);
-    _goertzels[2] = new Goertzel(FREQ_L2, 20, sampleRate);
-    _goertzels[3] = new Goertzel(FREQ_H2, 20, sampleRate);
-    _goertzels[4] = new Goertzel(FREQ_L3, 20, sampleRate);
-    _goertzels[5] = new Goertzel(FREQ_H3, 20, sampleRate);
-    _goertzels[6] = new Goertzel(FREQ_L4, 20, sampleRate);
-    _goertzels[7] = new Goertzel(FREQ_H4, 20, sampleRate);
+    _goertzels[0] = new Goertzel(FREQ_L1, N, sampleRate);
+    _goertzels[1] = new Goertzel(FREQ_H1, N, sampleRate);
+    _goertzels[2] = new Goertzel(FREQ_L2, N, sampleRate);
+    _goertzels[3] = new Goertzel(FREQ_H2, N, sampleRate);
+    _goertzels[4] = new Goertzel(FREQ_L3, N, sampleRate);
+    _goertzels[5] = new Goertzel(FREQ_H3, N, sampleRate);
+    _goertzels[6] = new Goertzel(FREQ_L4, N, sampleRate);
+    _goertzels[7] = new Goertzel(FREQ_H4, N, sampleRate);
 
-    const int sampleInterval_us = 1000000 / sampleRate;
+    _sampleRate = sampleRate;
+    _samples = new uint16_t[N];
 
-    timer.attach_us(&captureSamples, sampleInterval_us);
+    create_fiber(detectTones);
 }
 
 //%
@@ -136,15 +129,21 @@ void setThreshold(int threshold)
 }
 
 //%
+void onTest(Action handler)
+{
+    _testHandler = handler;
+    pxt::incr(_testHandler);
+}
+
+//%
 int getTest()
 {
-    return _goertzels[0]->getMagnitude();
+    return _pService->readSample();
 }
 
 //%
 int getGoertzel(int index)
 {
-    return _goertzels[index]->getMagnitude();
+    return _goertzels[index]->getMagnitudeSquared();
 }
-
 }

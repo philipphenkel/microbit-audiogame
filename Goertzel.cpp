@@ -2,41 +2,35 @@
 
 #define ADCCENTER 512
 
-Goertzel::Goertzel(float frequencyToDetect, float N, float samplingFrequency)
+Goertzel::Goertzel(float targetFrequency, float N, float samplingRate)
 {
-    this->samplingFrequency = samplingFrequency;
-    this->frequencyToDetect = frequencyToDetect;
+    this->samplingRate = samplingRate;
+    this->targetFrequency = targetFrequency;
     this->N = N;
-    float omega = (2.0 * PI * frequencyToDetect) / samplingFrequency;
+    float k = (int)(0.5 + ((N * targetFrequency) / samplingRate));
+    float omega = (2.0 * PI * k) / N;
     coeff = 2.0 * cos(omega);
-    Q1 = 0;
-    Q2 = 0;
-    count = 0;
+    q1 = 0;
+    q2 = 0;
 }
 
-void Goertzel::resetGoertzel(void)
+void Goertzel::reset(void)
 {
-    count = 0;
-    Q2 = 0;
-    Q1 = 0;
+    q2 = 0;
+    q1 = 0;
 }
 
-bool Goertzel::processSample(uint16_t sample)
+void Goertzel::processSamples(uint16_t *samples)
 {
-    count++;
-    float Q0 = coeff * Q1 - Q2 + ((float)sample - ADCCENTER);
-    Q2 = Q1;
-    Q1 = Q0;
-    if (count >= N) {
-        lastMagnitude = (Q1 * Q1 + Q2 * Q2 - coeff * Q1 * Q2); // no sqrt
-        resetGoertzel();
-        return true;
+    for (int i = 0; i < (int)N; i++)
+    {
+        float q0 = coeff * q1 - q2 + (samples[i] - 511); // -AdcCenter???
+        q2 = q1;
+        q1 = q0;
     }
-    return false;
 }
 
-int Goertzel::getMagnitude()
+int Goertzel::getMagnitudeSquared()
 {
-    return lastMagnitude;
+    return (int)(q1 * q1 + q2 * q2 - q1 * q2 * coeff);
 }
-
