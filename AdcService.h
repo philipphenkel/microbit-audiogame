@@ -12,6 +12,7 @@ private:
 
 public:
   AdcService(MicroBitPin *pin);
+  ~AdcService();
 
   uint16_t readSample();
   void captureSamples(uint16_t *samples, int count, int sampleRate);

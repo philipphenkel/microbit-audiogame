@@ -8,6 +8,10 @@ AdcService::AdcService(MicroBitPin *pin)
     timer = new Timer();
 }
 
+AdcService::~AdcService() {
+    delete timer, timer = 0;
+}
+
 uint16_t AdcService::readSample()
 {
     return pin->getAnalogValue();
