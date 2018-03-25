@@ -30,9 +30,9 @@
 class Goertzel
 {
 public:
-  Goertzel(float, float, Sampler* sampler);
+  Goertzel(float, float);
 	void sample(int);
-	float detect();
+	float detect(int *samples, int sampleCount);
 
 private:
 	void GetRealImag(float*, float*);

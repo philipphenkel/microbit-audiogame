@@ -67,15 +67,15 @@ const float THRESHOLD = 1000;
 //  _SFR_BYTE(ADCSRA) &= ~_BV(ADPS0); // Clear ADPS0
 const float SAMPLING_FREQUENCY = 8900;
 
-Sampler* sampler = new Sampler();
+Sampler sampler = Sampler();
 
-Goertzel goertzel1 = Goertzel(697, SAMPLING_FREQUENCY, sampler);
+Goertzel goertzel1 = Goertzel(697, SAMPLING_FREQUENCY);
 //Goertzel goertzel2 = Goertzel(1209, SAMPLING_FREQUENCY, sampler);
 DTMF dtmf = DTMF(speakerPin1, speakerPin2);
 
 void setup() {
-  pinMode(button1pin, INPUT);
-  pinMode(button2pin, INPUT);
+  pinMode(button1pin, INPUT_PULLUP);
+  pinMode(button2pin, INPUT_PULLUP);
 
   pinMode(speakerPin1, OUTPUT);
   pinMode(speakerPin2, OUTPUT);
@@ -90,12 +90,24 @@ void setup() {
   Serial.begin(9600);
 }
 
+
+void test(int *samples, int sampleCount)
+{
+
+  for (int index = 0; index < sampleCount; index++)
+  {
+    Serial.print(samples[index]);
+    Serial.print(", ");
+  }
+  Serial.println("");
+}
+
 void loop()
 {
-  sampler->sample(sensorPin);
+  sampler.sample(sensorPin);
 
-  float magnitude1 = goertzel1.detect();
-  //float magnitude2 = goertzel2.detect();
+  float magnitude1 = goertzel1.detect(sampler.samples, sampler.sampleCount);
+  //float magnitude2 = goertzel2.detect(sampler.samples, sampler.sampleCount);
 
   if(magnitude1 > THRESHOLD) { //if you're getting false hits or no hits adjust this
     digitalWrite(led, HIGH); //if found, enable led
@@ -103,17 +115,19 @@ void loop()
     digitalWrite(led, LOW); //if not found, or lost, disable led
   }
 
-  Serial.print(magnitude1);
+  //Serial.print(magnitude1);
   //Serial.print(" - ");
   //Serial.print(magnitude2);
-  Serial.println();
+  //Serial.println();
 
   if (digitalRead(button1pin) == LOW) {
+    Serial.println("Button A");
     dtmf.playDTMF(0, 500);
     digitalWrite(col1, HIGH);
     digitalWrite(col2, LOW);
     digitalWrite(led, HIGH);
   } else {
+    Serial.println("No Button");
     digitalWrite(col1, LOW);
     digitalWrite(col2, HIGH);
     digitalWrite(led, LOW);

@@ -26,11 +26,9 @@ float _TARGET_FREQUENCY;
 float coeff;
 float Q1;
 float Q2;
-Sampler* _sampler;
 
-Goertzel::Goertzel(float TARGET_FREQUENCY, float SAMPLING_FREQUENCY, Sampler* sampler)
+Goertzel::Goertzel(float TARGET_FREQUENCY, float SAMPLING_FREQUENCY)
 {
-	_sampler = sampler;
   _SAMPLING_FREQUENCY = SAMPLING_FREQUENCY;	//on 16mhz, ~8928.57142857143, on 8mhz ~44444
   _TARGET_FREQUENCY = TARGET_FREQUENCY; //should be integer of SAMPLING_RATE/N
 
@@ -59,13 +57,13 @@ void Goertzel::ProcessSample(int sample)
 }
 
 
-float Goertzel::detect()
+float Goertzel::detect(int *samples, int sampleCount)
 {
   float	magnitude;
 
-  for (int index = 0; index < _sampler->sampleCount; index++)
+  for (int index = 0; index < sampleCount; index++)
   {
-    ProcessSample(_sampler->samples[index]);
+    ProcessSample(samples[index]);
   }
 
   /* Do the "standard Goertzel" processing. */
