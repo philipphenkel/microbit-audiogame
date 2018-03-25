@@ -1,23 +1,26 @@
 #ifndef ADC_SERVICE_H
 #define ADC_SERVICE_H
 
-#include "MicroBitConfig.h"
-#include "EventModel.h"
-
-#define MICROBIT_ID_ADC 9602
-#define MICROBIT_ADC_EVT_UPDATE 2
+#include "mbed.h"
 
 class AdcService
 {
+private:
   AnalogIn *pin;
+  Timer *timer;
 
-  public:
-    AdcService(PinName name);
+public:
+  AdcService(PinName name);
 
-    void setSampleRate(int rate);
-    uint16_t getSample();
+  uint16_t readSample();
+  void captureSamples(uint16_t *samples, int count, int sampleRate);
+  void captureSamples8Bit(uint8_t *samples, int count, int sampleRate);
 
-  private:
+private:
+  template <class T>
+  void capture(T *samples, int count, int sampleRate);
+  void read(uint16_t &sample);
+  void read(uint8_t &sample);
 };
 
 #endif

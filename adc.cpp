@@ -35,7 +35,7 @@ uint16_t getSample()
     {
         return -1;
     }
-    return _pService->getSample();
+    return _pService->readSample();
 }
 
 inline bool isActive(Goertzel *goertzel)
