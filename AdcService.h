@@ -16,6 +16,7 @@ public:
   uint16_t readSample();
   void captureSamples(uint16_t *samples, int count, int sampleRate);
   void captureSamples8Bit(uint8_t *samples, int count, int sampleRate);
+  void generateSineSamples(uint16_t *samples, int count, int sampleRate, int frequency);
 
 private:
   template <class T>

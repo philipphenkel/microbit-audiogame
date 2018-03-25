@@ -23,20 +23,38 @@ void AdcService::captureSamples8Bit(uint8_t *samples, int count, int sampleRate)
     capture(samples, count, sampleRate);
 }
 
+void AdcService::generateSineSamples(uint16_t *samples, int count, int sampleRate, int frequency)
+{
+    float step = ((float)frequency) * ((2.0 * PI) / ((float)sampleRate));
+
+    for (int index = 0; index < count; index++)
+    {
+        samples[index] = (uint16_t)(100.0f * sin(index * step) + 100.0);
+    }
+}
+
 template <class T>
 void AdcService::capture(T *samples, int count, int sampleRate)
 {
     const int readInterval_us = 1000000 / sampleRate;
+    int nextReadTimestamp = readInterval_us;
     timer->start();
-    for (int i = 0; i < count; ++i)
+    timer->reset();
+    for (int i = 0; i < count; ++i, nextReadTimestamp += readInterval_us)
     {
-        timer->reset();
         read(samples[i]);
-        while (timer->read_us() < readInterval_us)
+        while (timer->read_us() < nextReadTimestamp)
         {
             ;
         }
     }
+
+    /*
+    int dur = timer->read_us();
+    int sr = 1000000.0f / ((1.0f * dur) / count);
+    printf("capture %d/%d us %d/%d Hz\n", dur, count * readInterval_us, sr, sampleRate);
+    */
+
     timer->stop();
 }
 

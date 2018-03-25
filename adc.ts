@@ -8,8 +8,8 @@ namespace zkm {
 
    /**
     * Starts sampling
-    * @pin value to send over serial, eg: AdcPin.P0
-    * @sampleRate in Hz, eg: 4096
+    * @pin value to send over serial; eg: AdcPin.P0
+    * @sampleRate in Hz; eg: 8000
     */
     //% weight=80
     //% blockId=zkm_start block="start capture from pin %pin | with sample rate %sampleRate"
@@ -23,7 +23,7 @@ namespace zkm {
     /**
      * todo
      */
-    //% blockId="zkm_get" block="get "
+    //% blockId="zkm_get" block="get sample"
     export function get(): number {
         return getSample()
     }
